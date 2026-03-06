@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Admin Panel — Badshah Hack</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--g:#00ff9c;--g2:#00ffcc;--cyan:#00e5ff;--red:#ff3366;--yellow:#ffd700;--orange:#ff6b35;--purple:#a855f7;
+--bg:#000508;--card:rgba(3,12,22,.95);--card2:rgba(5,16,28,.97);--border:rgba(0,255,156,.14);--text:#c8e6ff;--dim:rgba(0,255,156,.38);
+--glow:0 0 8px #00ff9c,0 0 22px rgba(0,255,156,.38);--f1:'Orbitron',monospace;--f2:'Rajdhani',sans-serif;--f3:'Share Tech Mono',monospace;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--text);font-family:var(--f2);min-height:100vh}
+#BG{position:fixed;inset:0;z-index:0;pointer-events:none}
+#bg-base{position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 0%,rgba(0,28,14,.9) 0%,transparent 65%),linear-gradient(175deg,#000408 0%,#000a12 50%,#000408 100%)}
+#hexgrid{position:absolute;inset:0;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='104'%3E%3Cpath d='M30 70L0 52V18L30 0l30 18v34z' fill='none' stroke='%2300ff9c' stroke-width='.7'/%3E%3Cpath d='M30 104L0 86V52l30-18 30 18v34z' fill='none' stroke='%2300ff9c' stroke-width='.7'/%3E%3C/svg%3E");animation:hexD 38s linear infinite}
+@keyframes hexD{from{background-position:0 0}to{background-position:60px 104px}}
+#scan{position:absolute;top:-4px;left:0;right:0;height:4px;background:linear-gradient(90deg,transparent,rgba(0,255,156,.6) 50%,transparent);animation:scanD 9s linear infinite;filter:blur(1px)}
+@keyframes scanD{from{top:-4px}to{top:100vh}}
+.wrap{position:relative;z-index:2;max-width:520px;margin:0 auto;padding:20px 16px 50px}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(0,5,14,.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);margin-bottom:18px;border-radius:16px}
+.logo{display:flex;align-items:center;gap:10px}
+.lic{width:38px;height:38px;background:linear-gradient(135deg,var(--red),#ff6b35);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 0 12px rgba(255,51,102,.4)}
+h2{font-family:var(--f1);font-size:12px;color:var(--red);letter-spacing:3px}
+.section{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px;margin-bottom:14px;position:relative;overflow:hidden}
+.section::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--g),var(--cyan),var(--g),transparent);opacity:.7}
+.sec-title{font-family:var(--f1);font-size:10px;letter-spacing:4px;color:var(--dim);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.sec-title::before{content:'';width:14px;height:1px;background:var(--g);box-shadow:0 0 4px var(--g)}
+.flabel{font-family:var(--f1);font-size:9px;letter-spacing:3px;color:var(--dim);margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.flabel::before{content:'▸';color:var(--g)}
+.finp{width:100%;background:rgba(0,8,18,.85);border:1px solid rgba(0,255,156,.2);border-radius:12px;color:var(--g);font-family:var(--f1);font-size:13px;padding:12px 16px;outline:none;transition:all .3s;letter-spacing:1px;margin-bottom:10px}
+.finp:focus{border-color:var(--g);box-shadow:var(--glow)}
+.finp::placeholder{color:rgba(0,255,156,.1);font-size:10px}
+.gbtn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:linear-gradient(135deg,var(--g),var(--g2));color:#000;border-radius:12px;padding:14px;font-family:var(--f1);font-size:12px;font-weight:700;letter-spacing:3px;border:none;cursor:pointer;box-shadow:0 0 18px var(--g);transition:all .3s;margin-bottom:8px;position:relative;overflow:hidden}
+.gbtn:hover{transform:translateY(-2px)}
+.gbtn.red{background:linear-gradient(135deg,var(--red),#ff6b35);box-shadow:0 0 18px rgba(255,51,102,.35);color:#fff}
+.gbtn.outline{background:transparent;border:1px solid var(--g);color:var(--g);box-shadow:none}
+.gbtn.outline:hover{background:rgba(0,255,156,.07)}
+.gbtn.yellow{background:linear-gradient(135deg,#b45309,var(--yellow));color:#000;box-shadow:0 0 14px rgba(255,215,0,.3)}
+.queue-item{background:rgba(0,8,18,.8);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;position:relative}
+.qi-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.qi-uid{font-family:var(--f1);font-size:13px;color:var(--g);letter-spacing:2px}
+.qi-time{font-family:var(--f3);font-size:9px;color:var(--dim)}
+.qi-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(0,255,156,.04)}
+.qi-row:last-child{border-bottom:none}
+.qi-lbl{font-family:var(--f3);font-size:10px;color:rgba(0,255,156,.4)}
+.qi-val{font-family:var(--f1);font-size:10px;color:var(--text);letter-spacing:1px}
+.qi-msg{font-family:var(--f2);font-size:12px;color:var(--yellow);background:rgba(255,215,0,.05);border:1px solid rgba(255,215,0,.12);border-radius:8px;padding:8px;margin:8px 0}
+.qi-ss{width:100%;max-height:120px;object-fit:cover;border-radius:8px;margin:8px 0;border:1px solid var(--border);display:none}
+.qi-btns{display:flex;gap:6px;margin-top:10px}
+.approve-btn{flex:1;background:linear-gradient(135deg,var(--g),var(--g2));color:#000;border:none;border-radius:10px;padding:11px;font-family:var(--f1);font-size:10px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:all .3s}
+.approve-btn:hover{box-shadow:0 0 14px var(--g)}
+.reject-btn{background:transparent;border:1px solid rgba(255,51,102,.35);color:var(--red);border-radius:10px;padding:11px 14px;font-family:var(--f1);font-size:10px;cursor:pointer;transition:all .3s}
+.reject-btn:hover{background:rgba(255,51,102,.08)}
+.code-tag{background:var(--g);color:#000;font-family:var(--f1);font-size:10px;padding:3px 10px;border-radius:6px;letter-spacing:2px;margin-left:6px;font-weight:700}
+.code-list-item{background:rgba(0,8,18,.8);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between}
+.cli-code{font-family:var(--f1);font-size:14px;color:var(--g);letter-spacing:3px}
+.cli-del{background:transparent;border:1px solid rgba(255,51,102,.3);color:var(--red);border-radius:8px;padding:5px 12px;font-family:var(--f1);font-size:9px;cursor:pointer;transition:all .2s}
+.cli-del:hover{background:rgba(255,51,102,.1)}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(0,255,156,.04)}
+.toggle-row:last-child{border-bottom:none}
+.trow-lbl{font-family:var(--f2);font-size:13px;color:var(--text)}
+.trow-sub{font-family:var(--f3);font-size:9px;color:var(--dim);margin-top:2px}
+.tog{width:50px;height:26px;border-radius:26px;border:1px solid var(--border);background:rgba(0,20,10,.8);position:relative;cursor:pointer;transition:all .3s;flex-shrink:0}
+.tog.on{background:rgba(0,255,156,.1);border-color:var(--g);box-shadow:0 0 8px rgba(0,255,156,.3)}
+.tog-thumb{position:absolute;width:18px;height:18px;border-radius:50%;background:#1a3a25;top:3px;left:3px;transition:all .35s cubic-bezier(.68,-.55,.27,1.55)}
+.tog.on .tog-thumb{transform:translateX(24px);background:var(--g);box-shadow:0 0 8px var(--g)}
+.badge{display:inline-flex;border-radius:8px;padding:3px 10px;font-family:var(--f1);font-size:9px;letter-spacing:1px}
+.badge.pend{background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);color:var(--yellow)}
+.badge.appr{background:rgba(0,255,156,.1);border:1px solid rgba(0,255,156,.3);color:var(--g)}
+.badge.rej{background:rgba(255,51,102,.1);border:1px solid rgba(255,51,102,.3);color:var(--red)}
+.empty{text-align:center;padding:24px;font-family:var(--f3);font-size:11px;color:var(--dim);letter-spacing:2px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(0,8,20,.97);border:1px solid var(--g);color:var(--g);font-family:var(--f1);font-size:11px;letter-spacing:2px;padding:12px 26px;border-radius:14px;box-shadow:var(--glow);z-index:9999;display:none;white-space:nowrap;backdrop-filter:blur(18px)}
+.stats-row{display:flex;gap:8px;margin-bottom:16px}
+.stat-box{flex:1;background:rgba(0,8,18,.8);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center}
+.stat-num{font-family:var(--f1);font-size:20px;color:var(--g);text-shadow:var(--glow)}
+.stat-lbl{font-family:var(--f3);font-size:8px;color:var(--dim);letter-spacing:2px;margin-top:4px}
+</style>
+</head>
+<body>
+<div id="BG"><div id="bg-base"></div><div id="hexgrid"></div><div id="scan"></div></div>
+
+<div class="wrap">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="logo">
+      <div class="lic">⚙</div>
+      <div><h2>ADMIN PANEL</h2><div style="font-family:var(--f3);font-size:8px;color:var(--dim);letter-spacing:2px">BADSHAH HACK v8</div></div>
+    </div>
+    <a href="index.html" style="background:transparent;border:1px solid var(--border);color:var(--dim);border-radius:10px;padding:7px 14px;font-family:var(--f1);font-size:9px;cursor:pointer;text-decoration:none;letter-spacing:1px">← SITE</a>
+  </div>
+
+  <!-- LOGIN -->
+  <div class="section" id="loginSec">
+    <div class="sec-title">🔐 ADMIN LOGIN</div>
+    <div class="flabel">PASSWORD</div>
+    <input type="password" class="finp" id="passInp" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="gbtn red" onclick="doLogin()">🔐 LOGIN</button>
+    <div id="loginErr" style="font-family:var(--f1);font-size:11px;color:var(--red);text-align:center;display:none;letter-spacing:2px;margin-top:6px">❌ WRONG PASSWORD</div>
+  </div>
+
+  <!-- ADMIN CONTENT (hidden until login) -->
+  <div id="adminContent" style="display:none">
+
+    <!-- STATS -->
+    <div class="section">
+      <div class="sec-title">📊 OVERVIEW</div>
+      <div class="stats-row">
+        <div class="stat-box"><div class="stat-num" id="stPend">0</div><div class="stat-lbl">PENDING</div></div>
+        <div class="stat-box"><div class="stat-num" id="stAppr" style="color:var(--g)">0</div><div class="stat-lbl">APPROVED</div></div>
+        <div class="stat-box"><div class="stat-num" id="stRej" style="color:var(--red)">0</div><div class="stat-lbl">REJECTED</div></div>
+        <div class="stat-box"><div class="stat-num" id="stCodes" style="color:var(--yellow)">0</div><div class="stat-lbl">CODES</div></div>
+      </div>
+    </div>
+
+    <!-- DEPOSIT QUEUE -->
+    <div class="section">
+      <div class="sec-title">📥 DEPOSIT REQUESTS</div>
+      <div id="queueList"></div>
+    </div>
+
+    <!-- GENERATE CODE -->
+    <div class="section">
+      <div class="sec-title">🔑 GENERATE UNLOCK CODE</div>
+      <div class="flabel">CUSTOM CODE (6 chars) — ya auto generate</div>
+      <input type="text" class="finp" id="codeInp" placeholder="e.g. VIP001 (ya khali chhodo)" maxlength="6" style="text-transform:uppercase">
+      <button class="gbtn" onclick="genCode()">⚡ GENERATE CODE</button>
+      <button class="gbtn yellow" onclick="genRandCode()">🎲 RANDOM CODE</button>
+      <div id="generatedCode" style="display:none;background:rgba(0,255,156,.06);border:1px solid rgba(0,255,156,.25);border-radius:12px;padding:16px;text-align:center;margin-top:10px">
+        <div style="font-family:var(--f3);font-size:10px;color:var(--dim);letter-spacing:3px;margin-bottom:8px">GENERATED CODE:</div>
+        <div style="font-family:var(--f1);font-size:28px;color:var(--g);letter-spacing:8px;text-shadow:var(--glow)" id="genCodeVal">------</div>
+        <button onclick="copyCode()" style="margin-top:12px;background:transparent;border:1px solid var(--g);color:var(--g);border-radius:8px;padding:8px 20px;font-family:var(--f1);font-size:10px;cursor:pointer;letter-spacing:2px">📋 COPY CODE</button>
+      </div>
+    </div>
+
+    <!-- ACTIVE CODES LIST -->
+    <div class="section">
+      <div class="sec-title">🔑 ACTIVE CODES</div>
+      <div id="codesList"></div>
+      <button class="gbtn red" style="margin-top:8px" onclick="clearAllCodes()">🗑 CLEAR ALL CODES</button>
+    </div>
+
+    <!-- BROADCAST MESSAGE -->
+    <div class="section">
+      <div class="sec-title">📢 BROADCAST MESSAGE</div>
+      <div class="flabel">MESSAGE (shows on main site)</div>
+      <textarea class="finp" id="bcMsg" placeholder="Site pe banner message..." style="resize:vertical;min-height:70px;font-size:12px;letter-spacing:.5px;line-height:1.65"></textarea>
+      <button class="gbtn" onclick="saveBroadcast()">📢 SEND BROADCAST</button>
+      <button class="gbtn outline" onclick="clearBroadcast()">🗑 CLEAR BROADCAST</button>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="section">
+      <div class="sec-title">⚙ SITE SETTINGS</div>
+
+      <div class="toggle-row">
+        <div><div class="trow-lbl">Maintenance Mode</div><div class="trow-sub">Site ko temporarily band karo</div></div>
+        <div class="tog" id="tog_maint" onclick="toggleSetting('maintenance',this)"><div class="tog-thumb"></div></div>
+      </div>
+      <div class="toggle-row">
+        <div><div class="trow-lbl">Sound Effects</div><div class="trow-sub">Users ke liye sound on/off</div></div>
+        <div class="tog on" id="tog_sound" onclick="toggleSetting('sound',this)"><div class="tog-thumb"></div></div>
+      </div>
+      <div class="toggle-row">
+        <div><div class="trow-lbl">Auto Predict Mode</div><div class="trow-sub">Default auto prediction on</div></div>
+        <div class="tog" id="tog_auto" onclick="toggleSetting('auto',this)"><div class="tog-thumb"></div></div>
+      </div>
+    </div>
+
+    <!-- REGISTER LINK CHANGE -->
+    <div class="section">
+      <div class="sec-title">🔗 REGISTER LINK</div>
+      <div class="flabel">TASHAN WIN REGISTER LINK</div>
+      <input type="text" class="finp" id="regLinkInp" placeholder="https://www.tashanok.com/#/register?invitationCode=...">
+      <button class="gbtn" onclick="saveRegLink()">💾 SAVE LINK</button>
+    </div>
+
+    <!-- CHANGE PASSWORD -->
+    <div class="section">
+      <div class="sec-title">🔐 CHANGE PASSWORD</div>
+      <input type="password" class="finp" id="newPass1" placeholder="New password">
+      <input type="password" class="finp" id="newPass2" placeholder="Confirm password">
+      <button class="gbtn red" onclick="changePass()">🔐 CHANGE PASSWORD</button>
+    </div>
+
+    <!-- DANGER ZONE -->
+    <div class="section" style="border-color:rgba(255,51,102,.25)">
+      <div class="sec-title" style="color:rgba(255,51,102,.6)">⚠ DANGER ZONE</div>
+      <button class="gbtn red" onclick="resetAll()">🗑 RESET ALL DATA (FULL WIPE)</button>
+      <button class="gbtn outline" style="border-color:rgba(255,51,102,.35);color:var(--red)" onclick="clearQueue()">🗑 CLEAR DEPOSIT QUEUE</button>
+    </div>
+
+    <button class="gbtn outline" style="margin-top:6px" onclick="doLogout()">← LOGOUT</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const ADMIN_PASS_KEY='bp_admin_pass';
+const defaultPass='Raushan5686';
+
+function getPass(){return localStorage.getItem(ADMIN_PASS_KEY)||defaultPass;}
+function toast(m,d=2500){const t=document.getElementById('toast');t.textContent=m;t.style.display='block';clearTimeout(window._tt);window._tt=setTimeout(()=>t.style.display='none',d);}
+
+function doLogin(){
+  const v=document.getElementById('passInp').value;
+  if(v===getPass()){
+    document.getElementById('loginSec').style.display='none';
+    document.getElementById('adminContent').style.display='block';
+    loadAll();
+    toast('✅ LOGGED IN!');
+  } else {
+    document.getElementById('loginErr').style.display='block';
+    document.getElementById('passInp').value='';
+    setTimeout(()=>document.getElementById('loginErr').style.display='none',2000);
+  }
+}
+function doLogout(){
+  document.getElementById('loginSec').style.display='block';
+  document.getElementById('adminContent').style.display='none';
+  document.getElementById('passInp').value='';
+}
+document.getElementById('passInp').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+
+/* ---- LOAD ALL ---- */
+function loadAll(){loadQueue();loadCodes();loadStats();loadSettings();loadBcMsg();loadRegLink();}
+
+function loadStats(){
+  try{
+    const q=JSON.parse(localStorage.getItem('bp_admin_queue')||'[]');
+    document.getElementById('stPend').textContent=q.filter(x=>x.status==='pending').length;
+    document.getElementById('stAppr').textContent=q.filter(x=>x.status==='approved').length;
+    document.getElementById('stRej').textContent=q.filter(x=>x.status==='rejected').length;
+    const codes=JSON.parse(localStorage.getItem('bp_unlock_codes')||'[]');
+    document.getElementById('stCodes').textContent=codes.filter(x=>x.active).length;
+  }catch(e){}
+}
+
+/* ---- QUEUE ---- */
+function loadQueue(){
+  try{
+    const q=JSON.parse(localStorage.getItem('bp_admin_queue')||'[]');
+    const el=document.getElementById('queueList');
+    if(!q.length){el.innerHTML='<div class="empty">📭 No deposit requests yet</div>';return;}
+    el.innerHTML=q.map((item,i)=>`
+      <div class="queue-item" id="qi_${i}">
+        <div class="qi-top">
+          <span class="qi-uid">${item.uid}</span>
+          <span class="badge ${item.status==='pending'?'pend':item.status==='approved'?'appr':'rej'}">${item.status.toUpperCase()}</span>
+        </div>
+        <div class="qi-row"><span class="qi-lbl">AMOUNT</span><span class="qi-val" style="color:var(--g)">₹${item.amount}</span></div>
+        <div class="qi-row"><span class="qi-lbl">VIP PLAN</span><span class="qi-val">${item.vip==='none'||!item.vip?'Basic':item.vip.toUpperCase()+' VIP'}</span></div>
+        <div class="qi-row"><span class="qi-lbl">TIME</span><span class="qi-val">${item.time}</span></div>
+        ${item.message?`<div class="qi-msg">💬 "${item.message}"</div>`:''}
+        ${item.screenshot?`<img class="qi-ss" src="${item.screenshot}" onclick="this.style.maxHeight=this.style.maxHeight==='none'?'120px':'none'" style="display:block">
+        <div style="font-family:var(--f3);font-size:8px;color:var(--dim);text-align:center;letter-spacing:1px;margin-bottom:6px">Tap to expand screenshot</div>`:''}
+        ${item.status==='pending'?`
+        <div class="qi-btns">
+          <button class="approve-btn" onclick="approveReq(${i})">✅ APPROVE + SEND CODE</button>
+          <button class="reject-btn" onclick="rejectReq(${i})">✗ REJECT</button>
+        </div>`:`<div style="font-family:var(--f3);font-size:10px;color:var(--dim);text-align:center;padding:8px 0;letter-spacing:2px">${item.status==='approved'?'✅ APPROVED':'❌ REJECTED'}${item.assignedCode?' — Code: <span style="color:var(--g);font-weight:700">'+item.assignedCode+'</span>':''}</div>`}
+      </div>`).join('');
+  }catch(e){document.getElementById('queueList').innerHTML='<div class="empty">Error loading queue</div>';}
+}
+
+function approveReq(i){
+  try{
+    const q=JSON.parse(localStorage.getItem('bp_admin_queue')||'[]');
+    if(!q[i])return;
+    // Generate unique code
+    const code=genUniqueCode();
+    q[i].status='approved';q[i].assignedCode=code;
+    // Add to valid codes
+    const codes=JSON.parse(localStorage.getItem('bp_unlock_codes')||'[]');
+    codes.push({code,active:true,uid:q[i].uid,created:new Date().toLocaleString(),vip:q[i].vip});
+    localStorage.setItem('bp_unlock_codes',JSON.stringify(codes));
+    localStorage.setItem('bp_admin_queue',JSON.stringify(q));
+    // Also store in verified users
+    const users=JSON.parse(localStorage.getItem('bp_verified_users')||'[]');
+    users.push({uid:q[i].uid,vip:q[i].vip,code,joinDate:new Date().toLocaleDateString()});
+    localStorage.setItem('bp_verified_users',JSON.stringify(users));
+    loadAll();
+    // Show generated code prominently
+    document.getElementById('genCodeVal').textContent=code;
+    document.getElementById('generatedCode').style.display='block';
+    toast(`✅ APPROVED! Code: ${code} — Copy karke user ko bhejo`,4000);
+    // Scroll to generated code
+    document.getElementById('generatedCode').scrollIntoView({behavior:'smooth'});
+  }catch(e){toast('Error: '+e.message);}
+}
+
+function rejectReq(i){
+  if(!confirm('Reject this request?'))return;
+  try{
+    const q=JSON.parse(localStorage.getItem('bp_admin_queue')||'[]');
+    if(q[i]){q[i].status='rejected';localStorage.setItem('bp_admin_queue',JSON.stringify(q));loadAll();toast('❌ REJECTED');}
+  }catch(e){}
+}
+
+/* ---- CODE GENERATION ---- */
+function genUniqueCode(){
+  const chars='0123456789';
+  let code='';
+  for(let i=0;i<6;i++)code+=chars[Math.floor(Math.random()*chars.length)];
+  return code;
+}
+function genCode(){
+  let val=document.getElementById('codeInp').value.trim().toUpperCase();
+  if(!val)val=genUniqueCode();
+  if(val.length<3||val.length>6){toast('⚠ Code 3-6 characters hona chahiye');return;}
+  // Pad to 6 if less
+  while(val.length<6)val+='0';
+  addCode(val);
+}
+function genRandCode(){
+  const code=genUniqueCode();
+  document.getElementById('codeInp').value=code;
+  addCode(code);
+}
+function addCode(code){
+  try{
+    const codes=JSON.parse(localStorage.getItem('bp_unlock_codes')||'[]');
+    if(codes.find(c=>c.code===code)){toast('⚠ Yeh code already exists!');return;}
+    codes.push({code,active:true,created:new Date().toLocaleString(),uid:'manual'});
+    localStorage.setItem('bp_unlock_codes',JSON.stringify(codes));
+    document.getElementById('genCodeVal').textContent=code;
+    document.getElementById('generatedCode').style.display='block';
+    loadCodes();loadStats();
+    toast(`✅ CODE ADDED: ${code}`,3000);
+  }catch(e){}
+}
+function copyCode(){
+  const code=document.getElementById('genCodeVal').textContent;
+  navigator.clipboard?.writeText(code).then(()=>toast('📋 CODE COPIED: '+code)).catch(()=>toast('Code: '+code,4000));
+}
+
+function loadCodes(){
+  try{
+    const codes=JSON.parse(localStorage.getItem('bp_unlock_codes')||'[]');
+    const el=document.getElementById('codesList');
+    const active=codes.filter(c=>c.active);
+    if(!active.length){el.innerHTML='<div class="empty">No active codes</div>';return;}
+    el.innerHTML=active.map((c,i)=>`
+      <div class="code-list-item">
+        <div>
+          <div class="cli-code">${c.code}</div>
+          <div style="font-family:var(--f3);font-size:8px;color:var(--dim);margin-top:3px;letter-spacing:1px">${c.uid||'manual'} • ${c.created||'—'}</div>
+        </div>
+        <button class="cli-del" onclick="deactivateCode('${c.code}')">DEACTIVATE</button>
+      </div>`).join('');
+  }catch(e){}
+}
+function deactivateCode(code){
+  try{
+    const codes=JSON.parse(localStorage.getItem('bp_unlock_codes')||'[]');
+    const idx=codes.findIndex(c=>c.code===code);
+    if(idx>=0){codes[idx].active=false;localStorage.setItem('bp_unlock_codes',JSON.stringify(codes));loadCodes();loadStats();toast('🔒 Code deactivated: '+code);}
+  }catch(e){}
+}
+function clearAllCodes(){
+  if(!confirm('All codes delete karo?'))return;
+  localStorage.removeItem('bp_unlock_codes');loadCodes();loadStats();toast('🗑 All codes cleared');
+}
+
+/* ---- BROADCAST ---- */
+function loadBcMsg(){const v=localStorage.getItem('bp_broadcast')||'';document.getElementById('bcMsg').value=v;}
+function saveBroadcast(){const v=document.getElementById('bcMsg').value.trim();if(!v){toast('⚠ Message likhna zaruri hai');return;}localStorage.setItem('bp_broadcast',v);toast('📢 Broadcast saved!');}
+function clearBroadcast(){localStorage.removeItem('bp_broadcast');document.getElementById('bcMsg').value='';toast('🗑 Broadcast cleared');}
+
+/* ---- SETTINGS ---- */
+function loadSettings(){
+  try{const s=JSON.parse(localStorage.getItem('bp_settings')||'{}');
+  ['maintenance','sound','auto'].forEach(k=>{const el=document.getElementById('tog_'+k);if(el&&s[k])el.classList.add('on');});}catch(e){}
+}
+function toggleSetting(key,el){
+  el.classList.toggle('on');
+  try{const s=JSON.parse(localStorage.getItem('bp_settings')||'{}');s[key]=el.classList.contains('on');localStorage.setItem('bp_settings',JSON.stringify(s));toast(key+': '+(s[key]?'ON':'OFF'));}catch(e){}
+}
+
+/* ---- REG LINK ---- */
+function loadRegLink(){
+  const v=localStorage.getItem('bp_reg_link')||'https://www.tashanok.com/#/register?invitationCode=74245112827';
+  document.getElementById('regLinkInp').value=v;
+}
+function saveRegLink(){
+  const v=document.getElementById('regLinkInp').value.trim();
+  if(!v){toast('⚠ Link enter karo');return;}
+  localStorage.setItem('bp_reg_link',v);
+  toast('✅ Register link saved!');
+}
+
+/* ---- CHANGE PASSWORD ---- */
+function changePass(){
+  const p1=document.getElementById('newPass1').value;
+  const p2=document.getElementById('newPass2').value;
+  if(!p1||p1.length<4){toast('⚠ Min 4 characters');return;}
+  if(p1!==p2){toast('⚠ Passwords match nahi ho rahe');return;}
+  localStorage.setItem(ADMIN_PASS_KEY,p1);
+  document.getElementById('newPass1').value='';
+  document.getElementById('newPass2').value='';
+  toast('✅ Password changed!');
+}
+
+/* ---- DANGER ---- */
+function resetAll(){
+  if(!confirm('FULL RESET? Sab kuch delete ho jayega!'))return;
+  if(!confirm('ARE YOU SURE? This cannot be undone!'))return;
+  ['bp_admin_queue','bp_unlock_codes','bp_verified_users','bp_broadcast','bp_settings','bp_reg_link','bpCodes','bpHist','bp_v8_verified','bp_v8_pending','bp_v8_sub'].forEach(k=>localStorage.removeItem(k));
+  loadAll();toast('🗑 FULL RESET DONE');
+}
+function clearQueue(){
+  if(!confirm('Queue clear karo?'))return;
+  localStorage.removeItem('bp_admin_queue');loadQueue();loadStats();toast('🗑 Queue cleared');
+}
+</script>
+</body>
+</html>
